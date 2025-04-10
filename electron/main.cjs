@@ -2,19 +2,38 @@ const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const fs = require('fs')
 
+// 获取词库路径
+const getWordLibraryPath = () => {
+  return path.join(app.getPath('userData'), 'word_library.txt')
+}
+
 function createWindow() {
+  const isDev = process.argv.includes('--dev');
   const win = new BrowserWindow({
     frame: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false, // Should be false when using contextBridge
+      contextIsolation: true, // Should be true for security
+      webSecurity: false,
+      devTools: isDev,
+      preload: path.join(__dirname, 'preload.js') // Add this line
     }
   })
-  win.setMenu(null)
+  if (!isDev) {
+    win.setMenu(null)
+  }
   win.maximize()
 
+  // 检查词库文件是否存在，如果不存在则复制默认词库文件
+  const libPath = getWordLibraryPath()
+  if (!fs.existsSync(libPath)) {
+    fs.copyFileSync(
+      path.join(__dirname, '../dist/assets/words/word_library.txt'),
+      libPath
+    )
+  }
+
   // 在开发环境中加载Vite开发服务器
-  const isDev = process.argv.includes('--dev');
   if (isDev) {
     win.loadURL('http://localhost:5173')
   } else {
@@ -30,6 +49,17 @@ function createWindow() {
     }
   }
 }
+
+// 在app.whenReady()之前添加
+const { ipcMain } = require('electron')
+
+ipcMain.handle('get-word-library', () => {
+  return fs.readFileSync(getWordLibraryPath(), 'utf-8')
+})
+
+ipcMain.on('save-word-library', (_, content) => {
+  fs.writeFileSync(getWordLibraryPath(), content)
+})
 
 app.whenReady().then(() => {
   createWindow()

@@ -118,16 +118,18 @@ export default {
       }
     })
 
+    // 修改initializeCards方法
     const initializeCards = async () => {
+      const text = await window.electron.ipcRenderer.invoke('get-word-library')
       const pairs = store.state.difficulty === 'EASY' ? 12 :
                    store.state.difficulty === 'MEDIUM' ? 16 : 20
       
       // 从词库文件加载单词对
-      const response = await fetch('./assets/words/word_library.txt')
-      if (!response.ok) {
-        throw new Error('无法加载词库文件')
-      }
-      const text = await response.text()
+      // const response = await fetch('./assets/words/word_library.txt')
+      // if (!response.ok) {
+      //   throw new Error('无法加载词库文件')
+      // }
+      // const text = await response.text()
       const allLines = text.split('\n').filter(line => line.trim() !== '')
       
       // 解析单词对，忽略中英文中间的空格

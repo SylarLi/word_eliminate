@@ -17,22 +17,34 @@
       <el-button type="primary" @click="startGame" :disabled="!canStart">
         开始游戏
       </el-button>
+      <el-button @click="openWordLibraryEditor">
+        编辑词库
+      </el-button>
     </div>
   </div>
+  <WordLibraryEditor v-model:isVisible="showEditor" @close="showEditor = false" />
 </template>
 
 <script>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import WordLibraryEditor from './WordLibraryEditor.vue'
 
 export default {
   name: 'GameMode',
+  components: {
+    WordLibraryEditor
+  },
   setup() {
     const store = useStore()
     const selectedMode = ref(null)
     const selectedDifficulty = ref(null)
+    const showEditor = ref(false)
+    const openWordLibraryEditor = () => {
+      showEditor.value = true
+    }
 
-    const canStart = computed(() => 
+    const canStart = computed(() =>
       selectedMode.value && selectedDifficulty.value
     )
 
@@ -48,7 +60,9 @@ export default {
       selectedMode,
       selectedDifficulty,
       canStart,
-      startGame
+      startGame,
+      showEditor,
+      openWordLibraryEditor
     }
   }
 }

@@ -81,7 +81,7 @@ export default {
         audio.src = audioFiles[type]
         audio.volume = sfxVolume.value
         audio.dataset.inUse = 'true'
-        
+
         const playPromise = audio.play()
         if (playPromise !== undefined) {
           playPromise.then(() => {
@@ -156,6 +156,7 @@ export default {
 
 <style scoped>
 .audio-manager {
-  display: none; /* 隐藏音频元素 */
+  display: none;
+  /* 隐藏音频元素 */
 }
 </style>
