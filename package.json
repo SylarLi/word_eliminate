@@ -1,0 +1,80 @@
+{
+  "name": "word_eliminate",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "A word elimination game built with Vue and Electron",
+  "author": "Word Eliminate Team",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "electron:dev": "concurrently \"vite\" \"electron . --dev\"",
+    "electron:build": "vue-tsc -b && vite build && electron-builder",
+    "electron:preview": "electron ."
+  },
+  "dependencies": {
+    "element-plus": "^2.9.7",
+    "howler": "^2.2.4",
+    "vue": "^3.5.13",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "concurrently": "^9.1.2",
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vite-plugin-static-copy": "^2.3.1",
+    "vue-tsc": "^2.2.4"
+  },
+  "build": {
+    "appId": "com.word.eliminate",
+    "productName": "单词消消乐",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "public/icons/win/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "identity": null,
+      "icon": "public/icons/mac/icon.icns"
+    },
+    "linux": {
+      "icon": "public/icons/png/256x256.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  }
+}
